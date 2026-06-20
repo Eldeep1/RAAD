@@ -6,3 +6,12 @@
 //
 
 import Foundation
+
+struct WeatherModel {
+    let city: String
+    let country: String
+    let temperature: Double
+    let condition: String
+    let humidity: Int
+    let pressure: Double
+}

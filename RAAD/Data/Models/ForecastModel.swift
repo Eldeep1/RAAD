@@ -6,3 +6,10 @@
 //
 
 import Foundation
+
+struct ForecastModel {
+    
+    let date: String
+    let temperature: Double
+    let condition: String
+}
