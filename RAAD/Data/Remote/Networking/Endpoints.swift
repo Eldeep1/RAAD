@@ -9,8 +9,8 @@ import Foundation
 
 enum Endpoint {
     
-    case current(city: String)
-    case forecast(city: String, days: Int)
+    case current(latitude: Double,longitude: Double,)
+    case forecast(latitude: Double,longitude: Double, days: Int)
     
     var path: String {
         
@@ -27,18 +27,18 @@ enum Endpoint {
         
         switch self {
             
-        case .current(let city):
+        case .current(let latitude, let longitude):
             
             return [
                 .init(name: "key", value: APIConstants.apiKey),
-                .init(name: "q", value: city)
+                .init(name: "q", value: "\(latitude),\(longitude)")
             ]
             
-        case .forecast(let city, let days):
+        case .forecast(let latitude, let longitude, let days):
             
             return [
                 .init(name: "key", value: APIConstants.apiKey),
-                .init(name: "q", value: city),
+                .init(name: "q", value: "\(latitude),\(longitude)"),
                 .init(name: "days", value: "\(days)")
             ]
         }

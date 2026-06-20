@@ -9,9 +9,9 @@ import Foundation
 
 protocol WeatherRepositoryProtocol {
     
-    func getCurrentWeather(city: String) async throws -> WeatherModel
+    func getCurrentWeather(longitude:Double, lattitude:Double) async throws -> WeatherModel
     
-    func getForecast(city: String) async throws -> [ForecastModel]
+    func getForecast(longitude:Double, lattitude:Double) async throws -> [ForecastModel]
 }
 
 final class WeatherRepository:WeatherRepositoryProtocol {
@@ -22,10 +22,11 @@ final class WeatherRepository:WeatherRepositoryProtocol {
         self.remoteDataSource = remoteDataSource
     }
     
-    func getCurrentWeather(city: String) async throws -> WeatherModel {
+    func getCurrentWeather(longitude:Double, lattitude:Double) async throws -> WeatherModel {
         
         let dto = try await remoteDataSource.getCurrentWeather(
-            city: city
+            longitude: longitude,
+            lattitude: lattitude
         )
         return WeatherModel(
             city: dto.location.name,
@@ -39,12 +40,13 @@ final class WeatherRepository:WeatherRepositoryProtocol {
         )
     }
     
-    func getForecast(city: String) async throws -> [ForecastModel] {
+    func getForecast(longitude:Double, lattitude:Double) async throws -> [ForecastModel] {
         
         let dto = try await remoteDataSource.getForecast(
-                city: city,
-                days: 3
-            )
+            longitude: longitude,
+            lattitude: lattitude,
+            days: 3
+        )
         
         return dto.forecast.forecastday.map {
             

@@ -9,9 +9,9 @@ import Foundation
 
 protocol WeatherRemoteDataSourceProtocol {
     
-    func getCurrentWeather( city: String) async throws -> CurrentWeatherResponse
+    func getCurrentWeather( longitude:Double, lattitude:Double) async throws -> CurrentWeatherResponse
     
-    func getForecast(city: String, days: Int) async throws -> ForecastResponse
+    func getForecast(longitude:Double, lattitude:Double, days: Int) async throws -> ForecastResponse
 }
 
 final class WeatherRemoteDataSource: WeatherRemoteDataSourceProtocol {
@@ -22,17 +22,21 @@ final class WeatherRemoteDataSource: WeatherRemoteDataSourceProtocol {
         self.networkManager = networkManager
     }
     
-    func getCurrentWeather(city: String) async throws -> CurrentWeatherResponse {
+    func getCurrentWeather(longitude:Double, lattitude:Double) async throws -> CurrentWeatherResponse {
         try await networkManager.request(
-            endpoint: .current(city: city)
+            endpoint: .current(
+                latitude: lattitude,
+                longitude: longitude
+            )
         )
     }
     
-    func getForecast(city: String, days: Int) async throws -> ForecastResponse {
+    func getForecast(longitude:Double, lattitude:Double, days: Int) async throws -> ForecastResponse {
         
         try await networkManager.request(
             endpoint: .forecast(
-                city: city,
+                latitude: lattitude,
+                longitude: longitude,
                 days: days
             )
         )

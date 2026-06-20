@@ -14,22 +14,28 @@ final class DashboardViewModel: ObservableObject {
     @Published var forecast:[ForecastModel] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
-    
+    private let locationService: LocationServiceProtocol
     
     private let repository: WeatherRepositoryProtocol
     
-    init(repository: WeatherRepositoryProtocol) {
+    init(repository: WeatherRepositoryProtocol,locationService: LocationServiceProtocol) {
         self.repository = repository
+        self.locationService = locationService
     }
     
     func loadWeather() async {
+        
         isLoading = true
         do {
+            let location = try await locationService.requestCurrentLocation()
+
             weather = try await repository.getCurrentWeather(
-                city: "Dubai"
+                longitude: location.coordinate.longitude,
+                lattitude: location.coordinate.latitude
             )
             forecast = try await repository.getForecast(
-                city: "Dubai"
+                longitude: location.coordinate.longitude,
+                lattitude: location.coordinate.latitude
             )
         }
         catch {
