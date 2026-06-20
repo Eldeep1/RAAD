@@ -33,7 +33,9 @@ final class WeatherRepository:WeatherRepositoryProtocol {
             temperature: dto.current.temp_c,
             condition: dto.current.condition.text,
             humidity: dto.current.humidity,
-            pressure: dto.current.pressure_mb
+            pressure: dto.current.pressure_mb,
+            visibility: dto.current.vis_km,
+            feelsLike: dto.current.feelslike_c
         )
     }
     

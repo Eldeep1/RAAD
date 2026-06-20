@@ -14,4 +14,7 @@ struct WeatherModel {
     let condition: String
     let humidity: Int
     let pressure: Double
+    
+    let visibility: Double
+    let feelsLike: Double
 }

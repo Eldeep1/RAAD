@@ -23,5 +23,8 @@ struct CurrentDTO: Codable {
     let humidity: Int
     let pressure_mb: Double
     
+    let vis_km: Double
+    let feelslike_c: Double
+
     let condition: ConditionDTO
 }
