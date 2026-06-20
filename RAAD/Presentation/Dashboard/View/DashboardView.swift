@@ -8,8 +8,29 @@
 import SwiftUI
 
 struct DashboardView: View {
+    @EnvironmentObject var themeManager: ThemeManager
+    var colors: ThemeColors {
+
+        themeManager.currentTheme == .morning
+            ? .morning
+            : .evening
+    }
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ScrollView {
+            
+            VStack(spacing: 20) {
+                
+                HeaderView()
+                
+                CurrentWeatherView()
+                
+                ForecastSection()
+                
+                WeatherMetricsGrid()
+                
+            }
+            .padding()
+        }.background(colors.background).foregroundStyle(colors.primaryText)
     }
 }
-
+    
