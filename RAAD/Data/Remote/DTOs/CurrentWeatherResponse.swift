@@ -6,3 +6,22 @@
 //
 
 import Foundation
+
+struct CurrentWeatherResponse: Codable {
+    let location: LocationDTO
+    let current: CurrentDTO
+}
+struct LocationDTO: Codable {
+    
+    let name: String
+    let country: String
+    let localtime: String
+}
+struct CurrentDTO: Codable {
+    
+    let temp_c: Double
+    let humidity: Int
+    let pressure_mb: Double
+    
+    let condition: ConditionDTO
+}
