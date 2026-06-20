@@ -10,7 +10,21 @@ import CoreData
 
 struct ContentView: View {
     @StateObject private var themeManager = ThemeManager()
+    let networkManager : NetworkManagerProtocol
+    
+    let remoteDataSource : WeatherRemoteDataSourceProtocol
+    
+    let repository : WeatherRepositoryProtocol
+    
+    let viewModel : DashboardViewModel
+    init() {
+        let manager = NetworkManager()
+        self.networkManager = manager
+        self.remoteDataSource = WeatherRemoteDataSource(networkManager: manager)
+        self.repository = WeatherRepository(remoteDataSource: remoteDataSource)
+        self.viewModel = DashboardViewModel(repository:repository)
+    }
     var body: some View {
-        DashboardView().environmentObject(themeManager)
+        DashboardView(viewModel: viewModel).environmentObject(themeManager)
     }
 }

@@ -9,7 +9,11 @@ import SwiftUI
 
 struct DashboardView: View {
     @EnvironmentObject var themeManager: ThemeManager
-
+    @StateObject private var viewModel:DashboardViewModel
+    
+    init(viewModel:DashboardViewModel) {
+        _viewModel = StateObject( wrappedValue:viewModel)
+    }
     var body: some View {
         let colors = themeManager.currentTheme.colors
         
@@ -27,7 +31,9 @@ struct DashboardView: View {
                 
             }
             .padding()
-        }.background(colors.background).foregroundStyle(colors.primaryText)
+        }.background(colors.background).foregroundStyle(colors.primaryText).task {
+            await viewModel.loadWeather()
+        }
     }
 }
     
