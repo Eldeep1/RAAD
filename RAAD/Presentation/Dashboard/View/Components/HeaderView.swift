@@ -8,7 +8,25 @@
 import SwiftUI
 
 struct HeaderView: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
+    var onSearchTapped: () -> Void = {}
+
+       var body: some View {
+
+           HStack {
+
+               Text("RAAD")
+                   .font(.title2)
+                   .fontWeight(.bold)
+                   .foregroundStyle(.cyan)
+
+               Spacer()
+
+               Button(action: onSearchTapped) {
+
+                   Image(systemName: "magnifyingglass")
+                       .foregroundStyle(.cyan)
+               }
+           }
+           .padding(.horizontal)
+       }
 }

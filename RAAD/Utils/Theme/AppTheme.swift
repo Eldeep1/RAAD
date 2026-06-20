@@ -9,4 +9,11 @@ import Foundation
 enum AppTheme {
     case morning
     case evening
+    
+    var colors: ThemeColors {
+        switch self {
+        case .morning: return .morning
+        case .evening: return .evening
+        }
+    }
 }

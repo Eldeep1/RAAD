@@ -9,13 +9,10 @@ import SwiftUI
 
 struct DashboardView: View {
     @EnvironmentObject var themeManager: ThemeManager
-    var colors: ThemeColors {
 
-        themeManager.currentTheme == .morning
-            ? .morning
-            : .evening
-    }
     var body: some View {
+        let colors = themeManager.currentTheme.colors
+        
         ScrollView {
             
             VStack(spacing: 20) {
