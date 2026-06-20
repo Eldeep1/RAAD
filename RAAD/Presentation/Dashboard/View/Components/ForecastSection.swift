@@ -8,30 +8,26 @@
 import SwiftUI
 
 struct ForecastSection: View {
+    @EnvironmentObject var viewModel: DashboardViewModel
+
     var body: some View {
         
         VStack(spacing: 12) {
 
-            ForecastCardView(
-                day: "Tomorrow",
-                temperature: "38°",
-                condition: "Cloudy",
-                icon: "cloud.fill"
-            )
+            ForEach(
+                viewModel.forecast,
+                id: \.date
+            ) { forecast in
 
-            ForecastCardView(
-                day: "Wednesday",
-                temperature: "35°",
-                condition: "Heavy Rain",
-                icon: "cloud.rain.fill"
-            )
-
-            ForecastCardView(
-                day: "Thursday",
-                temperature: "40°",
-                condition: "Clear",
-                icon: "sun.max.fill"
-            )
+                ForecastCardView(
+                    day: forecast.date,
+                    temperature:
+                        "\(Int(forecast.temperature))°",
+                    condition:
+                        forecast.condition,
+                    icon: "cloud.fill"
+                )
+            }
         }
     }
 }

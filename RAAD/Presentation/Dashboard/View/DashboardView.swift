@@ -31,9 +31,10 @@ struct DashboardView: View {
                 
             }
             .padding()
-        }.background(colors.background).foregroundStyle(colors.primaryText).task {
-            await viewModel.loadWeather()
-        }
+        }.environmentObject(viewModel)
+            .background(colors.background).foregroundStyle(colors.primaryText).task {
+                await viewModel.loadWeather()
+            }
     }
 }
-    
+
