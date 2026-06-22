@@ -21,7 +21,8 @@ struct ForecastSection: View {
             ) { index, forecast in
                 NavigationLink {
                     WeatherDetailsView(
-                        hours: viewModel.hourlyForecastByDay[safe: index] ?? []
+                        hours: viewModel.hourlyForecastByDay[safe: index] ?? [],
+                        isToday: index == 0
                     )
                     .environmentObject(themeManager)
                 } label: {

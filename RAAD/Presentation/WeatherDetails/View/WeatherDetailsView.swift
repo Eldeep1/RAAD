@@ -14,9 +14,24 @@ struct WeatherDetailsView: View {
 
     @State private var selectedHour: HourlyForecastModel?
 
-    init(hours: [HourlyForecastModel]) {
+    init(hours: [HourlyForecastModel], isToday: Bool) {
         self.hours = hours
-        _selectedHour = State(initialValue: hours.first)
+
+        if isToday {
+            // Find the hour entry whose time matches the current clock hour
+            let currentHour = Calendar.current.component(.hour, from: Date())
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd HH:mm"
+
+            let match = hours.first { model in
+                guard let date = formatter.date(from: model.time) else { return false }
+                return Calendar.current.component(.hour, from: date) == currentHour
+            }
+            _selectedHour = State(initialValue: match ?? hours.first)
+        } else {
+            // Other days: nothing pre-selected
+            _selectedHour = State(initialValue: nil)
+        }
     }
 
     var body: some View {
@@ -26,15 +41,18 @@ struct WeatherDetailsView: View {
 
             VStack(spacing: 20) {
 
+                // Summary + metrics only appear once a card is tapped
                 if let selected = selectedHour {
-
                     WeatherSummaryCard(hour: selected)
+                }
 
-                    HourSelectorView(
-                        hours: hours,
-                        selectedHour: $selectedHour
-                    )
+                // Hour picker is always visible so the user can make a selection
+                HourSelectorView(
+                    hours: hours,
+                    selectedHour: $selectedHour
+                )
 
+                if let selected = selectedHour {
                     WeatherDetailsMetricsGrid(hour: selected)
                 }
             }
