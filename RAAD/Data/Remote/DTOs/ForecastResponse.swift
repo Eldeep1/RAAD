@@ -20,6 +20,8 @@ struct ForecastDayDTO: Codable {
     let date: String
     
     let day: DayDTO
+    let hour: [HourDTO]
+
 }
 struct DayDTO: Codable {
     

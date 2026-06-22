@@ -9,24 +9,30 @@ import SwiftUI
 
 struct ForecastSection: View {
     @EnvironmentObject var viewModel: DashboardViewModel
+    @EnvironmentObject var themeManager: ThemeManager
 
     var body: some View {
         
         VStack(spacing: 12) {
 
             ForEach(
-                viewModel.forecast,
-                id: \.date
-            ) { forecast in
-
-                ForecastCardView(
-                    day: forecast.date,
-                    temperature:
-                        "\(Int(forecast.temperature))°",
-                    condition:
-                        forecast.condition,
-                    icon: "cloud.fill"
-                )
+                Array(viewModel.forecast.enumerated()),
+                id: \.element.date
+            ) { index, forecast in
+                NavigationLink {
+                    WeatherDetailsView(
+                        hours: viewModel.hourlyForecastByDay[safe: index] ?? [],
+                        isToday: index == 0
+                    )
+                    .environmentObject(themeManager)
+                } label: {
+                    ForecastCardView(
+                        day: forecast.date,
+                        temperature: "\(Int(forecast.temperature))°",
+                        condition: forecast.condition,
+                        icon: "cloud.fill"
+                    )
+                }
             }
         }
     }
