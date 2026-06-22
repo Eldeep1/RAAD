@@ -18,7 +18,7 @@ struct WeatherDetailsView: View {
         self.hours = hours
 
         if isToday {
-            // Find the hour entry whose time matches the current clock hour
+           
             let currentHour = Calendar.current.component(.hour, from: Date())
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd HH:mm"
@@ -29,8 +29,8 @@ struct WeatherDetailsView: View {
             }
             _selectedHour = State(initialValue: match ?? hours.first)
         } else {
-            // Other days: nothing pre-selected
-            _selectedHour = State(initialValue: nil)
+            
+            _selectedHour = State(initialValue: hours.first)
         }
     }
 
@@ -41,12 +41,10 @@ struct WeatherDetailsView: View {
 
             VStack(spacing: 20) {
 
-                // Summary + metrics only appear once a card is tapped
                 if let selected = selectedHour {
                     WeatherSummaryCard(hour: selected)
                 }
 
-                // Hour picker is always visible so the user can make a selection
                 HourSelectorView(
                     hours: hours,
                     selectedHour: $selectedHour
