@@ -56,18 +56,20 @@ final class WeatherRepository:WeatherRepositoryProtocol {
                 )
             }
 
-            let hourly = dto.forecast.forecastday.first?.hour.map {
-                HourlyForecastModel(
-                    time: $0.time,
-                    temperature: $0.temp_c,
-                    humidity: $0.humidity,
-                    pressure: $0.pressure_mb,
-                    windSpeed: $0.wind_kph,
-                    rainChance: $0.chance_of_rain,
-                    condition: $0.condition.text
-                )
-            } ?? []
+            let hourlyByDay = dto.forecast.forecastday.map { day in
+                day.hour.map {
+                    HourlyForecastModel(
+                        time: $0.time,
+                        temperature: $0.temp_c,
+                        humidity: $0.humidity,
+                        pressure: $0.pressure_mb,
+                        windSpeed: $0.wind_kph,
+                        rainChance: $0.chance_of_rain,
+                        condition: $0.condition.text
+                    )
+                }
+            }
 
-            return ForecastResult(dailyForecast: daily,hourlyForecast: hourly)
+            return ForecastResult(dailyForecast: daily, hourlyForecastByDay: hourlyByDay)
         }
 }

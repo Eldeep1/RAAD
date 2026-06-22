@@ -16,18 +16,22 @@ struct ForecastSection: View {
         VStack(spacing: 12) {
 
             ForEach(
-                viewModel.forecast,
-                id: \.date
-            ) { forecast in
+                Array(viewModel.forecast.enumerated()),
+                id: \.element.date
+            ) { index, forecast in
                 NavigationLink {
-                    WeatherDetailsView(hours: viewModel.hourlyForecast).environmentObject(themeManager)
+                    WeatherDetailsView(
+                        hours: viewModel.hourlyForecastByDay[safe: index] ?? []
+                    )
+                    .environmentObject(themeManager)
                 } label: {
-                ForecastCardView(
-                    day: forecast.date,
-                    temperature: "\(Int(forecast.temperature))°",
-                    condition: forecast.condition,
-                    icon: "cloud.fill"
-                )}
+                    ForecastCardView(
+                        day: forecast.date,
+                        temperature: "\(Int(forecast.temperature))°",
+                        condition: forecast.condition,
+                        icon: "cloud.fill"
+                    )
+                }
             }
         }
     }

@@ -14,7 +14,7 @@ final class DashboardViewModel: ObservableObject {
     @Published var forecast:[ForecastModel] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
-    @Published var hourlyForecast: [HourlyForecastModel] = []
+    @Published var hourlyForecastByDay: [[HourlyForecastModel]] = []
     private let locationService: LocationServiceProtocol
     
     private let repository: WeatherRepositoryProtocol
@@ -40,7 +40,7 @@ final class DashboardViewModel: ObservableObject {
             )
             
             forecast = forecastResult.dailyForecast
-            hourlyForecast = forecastResult.hourlyForecast
+            hourlyForecastByDay = forecastResult.hourlyForecastByDay
             
         }
         catch {
