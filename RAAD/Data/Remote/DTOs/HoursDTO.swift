@@ -15,9 +15,9 @@ struct HourDTO: Codable {
 
     let humidity: Int
 
-    let wind_kph: Double
-
     let pressure_mb: Double
+
+    let wind_kph: Double
 
     let chance_of_rain: Int
 

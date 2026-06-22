@@ -6,3 +6,10 @@
 //
 
 import Foundation
+
+struct ForecastResult {
+
+    let dailyForecast: [ForecastModel]
+
+    let hourlyForecast: [HourlyForecastModel]
+}
