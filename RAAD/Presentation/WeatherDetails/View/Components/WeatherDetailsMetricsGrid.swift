@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct WeatherDetailsMetricsGrid: View {
+    @EnvironmentObject var themeManager: ThemeManager
 
     let hour: HourlyForecastModel
 
@@ -49,7 +50,9 @@ struct WeatherDetailsMetricsGrid: View {
         }
     }
 }
+
 struct MetricCard: View {
+    @EnvironmentObject var themeManager: ThemeManager
 
     let title: String
 
@@ -58,18 +61,21 @@ struct MetricCard: View {
     let icon: String
 
     var body: some View {
+        let colors = themeManager.currentTheme.colors
 
         VStack(alignment: .leading, spacing: 12) {
 
             Image(systemName: icon)
+                .foregroundStyle(colors.accent)
 
             Text(title)
                 .font(.caption)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(colors.secondaryText)
 
             Text(value)
                 .font(.title3)
                 .fontWeight(.semibold)
+                .foregroundStyle(colors.primaryText)
         }
         .frame(
             maxWidth: .infinity,
@@ -77,7 +83,7 @@ struct MetricCard: View {
             alignment: .leading
         )
         .padding()
-        .background(.ultraThinMaterial)
+        .background(colors.cardBackground)
         .clipShape(
             RoundedRectangle(cornerRadius: 20)
         )

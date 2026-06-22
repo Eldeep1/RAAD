@@ -6,9 +6,9 @@
 //
 
 import SwiftUI
-import SwiftUI
 
 struct WeatherDetailsView: View {
+    @EnvironmentObject var themeManager: ThemeManager
 
     let hours: [HourlyForecastModel]
 
@@ -20,6 +20,7 @@ struct WeatherDetailsView: View {
     }
 
     var body: some View {
+        let colors = themeManager.currentTheme.colors
 
         ScrollView {
 
@@ -39,6 +40,8 @@ struct WeatherDetailsView: View {
             }
             .padding()
         }
+        .background(colors.background)
+        .foregroundStyle(colors.primaryText)
         .navigationBarTitleDisplayMode(.inline)
     }
 }

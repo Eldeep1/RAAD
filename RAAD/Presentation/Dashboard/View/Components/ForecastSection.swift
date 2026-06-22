@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ForecastSection: View {
     @EnvironmentObject var viewModel: DashboardViewModel
+    @EnvironmentObject var themeManager: ThemeManager
 
     var body: some View {
         
@@ -19,7 +20,7 @@ struct ForecastSection: View {
                 id: \.date
             ) { forecast in
                 NavigationLink {
-                    WeatherDetailsView(hours: viewModel.hourlyForecast)
+                    WeatherDetailsView(hours: viewModel.hourlyForecast).environmentObject(themeManager)
                 } label: {
                 ForecastCardView(
                     day: forecast.date,

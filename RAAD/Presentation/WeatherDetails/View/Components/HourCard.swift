@@ -8,24 +8,29 @@
 import SwiftUI
 
 struct HourCard: View {
+    @EnvironmentObject var themeManager: ThemeManager
 
     let hour: HourlyForecastModel
 
     let isSelected: Bool
 
     var body: some View {
+        let colors = themeManager.currentTheme.colors
 
         VStack(spacing: 16) {
 
             Text(hour.displayTime)
                 .font(.headline)
+                .foregroundStyle(colors.primaryText)
 
             Image(systemName: iconName)
                 .font(.title2)
+                .foregroundStyle(isSelected ? colors.accent : colors.secondaryText)
 
             Text("\(Int(hour.temperature))°")
                 .font(.title3)
                 .fontWeight(.bold)
+                .foregroundStyle(colors.primaryText)
         }
         .frame(width: 95, height: 140)
         .background {
@@ -33,8 +38,8 @@ struct HourCard: View {
             RoundedRectangle(cornerRadius: 20)
                 .fill(
                     isSelected
-                    ? Color.cyan.opacity(0.15)
-                    : Color(.systemGray6)
+                    ? colors.accent.opacity(0.15)
+                    : colors.cardBackground
                 )
         }
         .overlay {
@@ -42,7 +47,7 @@ struct HourCard: View {
             RoundedRectangle(cornerRadius: 20)
                 .stroke(
                     isSelected
-                    ? Color.cyan
+                    ? colors.accent
                     : Color.clear,
                     lineWidth: 2
                 )
