@@ -14,6 +14,7 @@ final class DashboardViewModel: ObservableObject {
     @Published var forecast:[ForecastModel] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
+    @Published var hourlyForecast: [HourlyForecastModel] = []
     private let locationService: LocationServiceProtocol
     
     private let repository: WeatherRepositoryProtocol
@@ -33,10 +34,14 @@ final class DashboardViewModel: ObservableObject {
                 longitude: location.coordinate.longitude,
                 lattitude: location.coordinate.latitude
             )
-            forecast = try await repository.getForecast(
+            let forecastResult = try await repository.getForecast(
                 longitude: location.coordinate.longitude,
                 lattitude: location.coordinate.latitude
             )
+            
+            forecast = forecastResult.dailyForecast
+            hourlyForecast = forecastResult.hourlyForecast
+            
         }
         catch {
             errorMessage = error.localizedDescription

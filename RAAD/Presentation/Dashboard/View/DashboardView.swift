@@ -34,7 +34,7 @@ struct DashboardView: View {
         }.environmentObject(viewModel)
             .background(colors.background).foregroundStyle(colors.primaryText).task {
                 await viewModel.loadWeather()
-            }
+            }.navigationBarHidden(true)
     }
 }
 

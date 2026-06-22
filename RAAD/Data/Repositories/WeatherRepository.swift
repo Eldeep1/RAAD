@@ -11,7 +11,7 @@ protocol WeatherRepositoryProtocol {
     
     func getCurrentWeather(longitude:Double, lattitude:Double) async throws -> WeatherModel
     
-    func getForecast(longitude:Double, lattitude:Double) async throws -> [ForecastModel]
+    func getForecast(longitude:Double, lattitude:Double) async throws -> ForecastResult
 }
 
 final class WeatherRepository:WeatherRepositoryProtocol {
@@ -40,21 +40,34 @@ final class WeatherRepository:WeatherRepositoryProtocol {
         )
     }
     
-    func getForecast(longitude:Double, lattitude:Double) async throws -> [ForecastModel] {
+    func getForecast(longitude:Double, lattitude:Double) async throws -> ForecastResult {
         
         let dto = try await remoteDataSource.getForecast(
-            longitude: longitude,
-            lattitude: lattitude,
-            days: 3
-        )
-        
-        return dto.forecast.forecastday.map {
-            
-            ForecastModel(
-                date: $0.date,
-                temperature: $0.day.avgtemp_c,
-                condition: $0.day.condition.text
+                longitude: longitude,
+                lattitude: lattitude,
+                days: 3
             )
+
+            let daily = dto.forecast.forecastday.map {
+                ForecastModel(
+                    date: $0.date,
+                    temperature: $0.day.avgtemp_c,
+                    condition: $0.day.condition.text
+                )
+            }
+
+            let hourly = dto.forecast.forecastday.first?.hour.map {
+                HourlyForecastModel(
+                    time: $0.time,
+                    temperature: $0.temp_c,
+                    humidity: $0.humidity,
+                    pressure: $0.pressure_mb,
+                    windSpeed: $0.wind_kph,
+                    rainChance: $0.chance_of_rain,
+                    condition: $0.condition.text
+                )
+            } ?? []
+
+            return ForecastResult(dailyForecast: daily,hourlyForecast: hourly)
         }
-    }
 }

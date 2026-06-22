@@ -18,15 +18,15 @@ struct ForecastSection: View {
                 viewModel.forecast,
                 id: \.date
             ) { forecast in
-
+                NavigationLink {
+                    WeatherDetailsView(hours: viewModel.hourlyForecast)
+                } label: {
                 ForecastCardView(
                     day: forecast.date,
-                    temperature:
-                        "\(Int(forecast.temperature))°",
-                    condition:
-                        forecast.condition,
+                    temperature: "\(Int(forecast.temperature))°",
+                    condition: forecast.condition,
                     icon: "cloud.fill"
-                )
+                )}
             }
         }
     }
