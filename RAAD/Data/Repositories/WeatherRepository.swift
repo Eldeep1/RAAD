@@ -12,6 +12,10 @@ protocol WeatherRepositoryProtocol {
     func getCurrentWeather(longitude:Double, lattitude:Double) async throws -> WeatherModel
     
     func getForecast(longitude:Double, lattitude:Double) async throws -> ForecastResult
+    
+    func searchCities(query: String) async throws -> [SearchResultModel]
+    
+    func getFavouriteWeather(latitude: Double, longitude: Double) async throws -> FavouriteWeatherModel
 }
 
 final class WeatherRepository:WeatherRepositoryProtocol {
@@ -72,4 +76,66 @@ final class WeatherRepository:WeatherRepositoryProtocol {
 
             return ForecastResult(dailyForecast: daily, hourlyForecastByDay: hourlyByDay)
         }
+    
+    func searchCities(query: String) async throws -> [SearchResultModel] {
+        let dtos = try await remoteDataSource.searchCities(query: query)
+        return dtos.map {
+            SearchResultModel(
+                id: $0.id,
+                name: $0.name,
+                region: $0.region,
+                country: $0.country,
+                latitude: $0.lat,
+                longitude: $0.lon
+            )
+        }
+    }
+    
+    func getFavouriteWeather(latitude: Double, longitude: Double) async throws -> FavouriteWeatherModel {
+        async let currentTask  = remoteDataSource.getCurrentWeather(longitude: longitude, lattitude: latitude)
+        async let forecastTask = remoteDataSource.getForecast(longitude: longitude, lattitude: latitude, days: 1)
+
+        let (current, forecast) = try await (currentTask, forecastTask)
+
+        let today = forecast.forecast.forecastday.first
+
+        // Parse localtime "yyyy-MM-dd HH:mm" → "HH:mm • TZ"
+        let localTimeString = WeatherRepository.formatLocalTime(
+            localtime: forecast.location.localtime,
+            tzId: forecast.location.tz_id
+        )
+
+        return FavouriteWeatherModel(
+            id: UUID(),
+            cityName: forecast.location.name,
+            country: forecast.location.country,
+            latitude: latitude,
+            longitude: longitude,
+            temperature: current.current.temp_c,
+            highTemp: today?.day.maxtemp_c ?? current.current.temp_c,
+            lowTemp: today?.day.mintemp_c ?? current.current.temp_c,
+            condition: current.current.condition.text,
+            localTime: localTimeString
+        )
+    }
+
+    // MARK: - Helpers
+
+    private static func formatLocalTime(localtime: String, tzId: String) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm"
+
+        guard let date = formatter.date(from: localtime) else { return localtime }
+
+        let output = DateFormatter()
+        output.dateFormat = "HH:mm"
+
+        // Derive a short timezone abbreviation from the tz_id e.g. "Europe/London" → "BST"
+        let tz = TimeZone(identifier: tzId) ?? .current
+        output.timeZone = tz
+        let timeStr = output.string(from: date)
+
+        let abbr = tz.abbreviation(for: date) ?? tzId
+        return "\(timeStr) • \(abbr)"
+    }
 }
