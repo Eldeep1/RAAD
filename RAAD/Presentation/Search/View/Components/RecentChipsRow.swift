@@ -8,11 +8,35 @@
 import SwiftUI
 
 struct RecentChipsRow: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
-}
+    @EnvironmentObject var themeManager: ThemeManager
+    let recents: [String]
+    let onTap: (String) -> Void
 
-#Preview {
-    RecentChipsRow()
+    var body: some View {
+        let colors = themeManager.currentTheme.colors
+
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                Text("RECENT:")
+                    .font(.caption2)
+                    .fontWeight(.bold)
+                    .foregroundStyle(colors.secondaryText)
+
+                ForEach(recents, id: \.self) { term in
+                    Button {
+                        onTap(term)
+                    } label: {
+                        Text(term.uppercased())
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(colors.primaryText)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(colors.cardBackground)
+                            .clipShape(Capsule())
+                    }
+                }
+            }
+        }
+    }
 }

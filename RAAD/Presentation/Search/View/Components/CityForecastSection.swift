@@ -8,11 +8,30 @@
 import SwiftUI
 
 struct CityForecastSection: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
-}
+    @EnvironmentObject var themeManager: ThemeManager
+    @EnvironmentObject var viewModel: CityWeatherViewModel
 
-#Preview {
-    CityForecastSection()
+    var body: some View {
+        VStack(spacing: 12) {
+            ForEach(
+                Array(viewModel.forecast.enumerated()),
+                id: \.element.date
+            ) { index, forecast in
+                NavigationLink {
+                    WeatherDetailsView(
+                        hours: viewModel.hourlyForecastByDay[safe: index] ?? [],
+                        isToday: index == 0
+                    )
+                    .environmentObject(themeManager)
+                } label: {
+                    ForecastCardView(
+                        day: forecast.date,
+                        temperature: "\(Int(forecast.temperature))°",
+                        condition: forecast.condition,
+                        icon: "cloud.fill"
+                    )
+                }
+            }
+        }
+    }
 }
