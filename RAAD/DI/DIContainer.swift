@@ -6,45 +6,65 @@
 //
 
 import Foundation
+import CoreData
 
-//
-//
-//
-//let viewModel : DashboardViewModel
-//init() {
-
-//
-//    self.viewModel =
 class DIContainer {
     static let shared = DIContainer()
     private init() {}
-    
+
+    // MARK: - Networking
+
     private func resolveNetworkManager() -> NetworkManagerProtocol {
         NetworkManager()
     }
-       
+
     private func resolveRemoteDataSource() -> WeatherRemoteDataSourceProtocol {
         WeatherRemoteDataSource(networkManager: resolveNetworkManager())
     }
-           
+
+    // MARK: - Repositories
+
     private func resolveWeatherRepository() -> WeatherRepositoryProtocol {
         WeatherRepository(remoteDataSource: resolveRemoteDataSource())
     }
-               
+
     private func resolveLocationService() -> LocationServiceProtocol {
         LocationService()
     }
-    
-    
-    @MainActor func resolveDashboardViewModel() -> DashboardViewModel{
-        DashboardViewModel(repository:resolveWeatherRepository(), locationService: resolveLocationService())
+
+    func resolveFavouriteLocationRepository() -> FavouriteLocationRepository {
+        FavouriteLocationRepository(context: PersistenceController.shared.container.viewContext)
     }
 
-//    func resolveWeatherDetailsViewModel(location: CLLocationCoordinate2D,selectedDate: Date) -> WeatherDetailsViewModel {
-//        WeatherDetailsViewModel(
-//            repository: resolveWeatherRepository(),
-//            location: location,
-//            selectedDate: selectedDate
-//        )
-//    }
+    // MARK: - ViewModels
+
+    @MainActor func resolveDashboardViewModel() -> DashboardViewModel {
+        DashboardViewModel(
+            repository: resolveWeatherRepository(),
+            locationService: resolveLocationService()
+        )
+    }
+
+    @MainActor func resolveSearchViewModel() -> SearchViewModel {
+        SearchViewModel(
+            repository: resolveWeatherRepository(),
+            favouriteRepo: resolveFavouriteLocationRepository()
+        )
+    }
+
+    @MainActor func resolveCityWeatherViewModel(
+        cityName: String,
+        country: String,
+        latitude: Double,
+        longitude: Double
+    ) -> CityWeatherViewModel {
+        CityWeatherViewModel(
+            cityName: cityName,
+            country: country,
+            latitude: latitude,
+            longitude: longitude,
+            repository: resolveWeatherRepository(),
+            favouriteRepo: resolveFavouriteLocationRepository()
+        )
+    }
 }
