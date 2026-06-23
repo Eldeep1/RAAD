@@ -18,9 +18,10 @@ final class ThemeManager: ObservableObject {
     func updateTheme() {
 
         let hour = Calendar.current.component(.hour, from: Date())
-
-        currentTheme = hour >= 18
-            ? .evening
-            : .morning
+        print("aaaaaaaaaaaaaaaaaaaa")
+        print(hour)
+        currentTheme = (hour >= 5 && hour < 18)
+            ? .morning
+            : .evening
     }
 }
