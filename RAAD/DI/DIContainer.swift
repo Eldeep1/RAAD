@@ -12,7 +12,6 @@ class DIContainer {
     static let shared = DIContainer()
     private init() {}
 
-    // MARK: - Networking
 
     private func resolveNetworkManager() -> NetworkManagerProtocol {
         NetworkManager()
@@ -22,7 +21,11 @@ class DIContainer {
         WeatherRemoteDataSource(networkManager: resolveNetworkManager())
     }
 
-    // MARK: - Repositories
+
+    private func resolveFavouriteLocalDataSource() -> FavouriteLocalDataSourceProtocol {
+        FavouriteLocalDataSource(context: PersistenceController.shared.container.viewContext)
+    }
+
 
     private func resolveWeatherRepository() -> WeatherRepositoryProtocol {
         WeatherRepository(remoteDataSource: resolveRemoteDataSource())
@@ -32,11 +35,10 @@ class DIContainer {
         LocationService()
     }
 
-    func resolveFavouriteLocationRepository() -> FavouriteLocationRepository {
-        FavouriteLocationRepository(context: PersistenceController.shared.container.viewContext)
+    func resolveFavouriteLocationRepository() -> FavouriteLocationRepositoryProtocol {
+        FavouriteLocationRepository(localDataSource: resolveFavouriteLocalDataSource())
     }
 
-    // MARK: - ViewModels
 
     @MainActor func resolveDashboardViewModel() -> DashboardViewModel {
         DashboardViewModel(

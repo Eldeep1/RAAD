@@ -7,7 +7,6 @@
 
 import Foundation
 import Combine
-import CoreData
 
 @MainActor
 final class SearchViewModel: ObservableObject {
@@ -23,14 +22,14 @@ final class SearchViewModel: ObservableObject {
 
 
     private let repository: WeatherRepositoryProtocol
-    private let favouriteRepo: FavouriteLocationRepository
+    private let favouriteRepo: FavouriteLocationRepositoryProtocol
 
 
     private var searchTask: Task<Void, Never>?
     private let recentKey = "recentSearches"
 
 
-    init(repository: WeatherRepositoryProtocol, favouriteRepo: FavouriteLocationRepository) {
+    init(repository: WeatherRepositoryProtocol, favouriteRepo: FavouriteLocationRepositoryProtocol) {
         self.repository = repository
         self.favouriteRepo = favouriteRepo
         loadRecentSearches()
@@ -70,7 +69,7 @@ final class SearchViewModel: ObservableObject {
     }
 
     func loadFavourites() {
-        let saved = favouriteRepo.fetchAll()
+        let saved: [FavouriteLocationEntity] = favouriteRepo.fetchAll()
         guard !saved.isEmpty else {
             favourites = []
             return
