@@ -140,7 +140,7 @@ struct FavouriteCardView: View {
                         .foregroundStyle(colors.secondaryText)
                 }
 
-                // Delete button in edit mode
+                
                 if isEditMode {
                     Button {
                         showDeleteConfirmation = true

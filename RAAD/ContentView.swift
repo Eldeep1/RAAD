@@ -13,7 +13,7 @@ struct ContentView: View {
 
     var body: some View {
         TabView {
-            // ── Home tab ─────────────────────────────────────────────────
+            
             NavigationView {
                 DashboardView(viewModel: DIContainer.shared.resolveDashboardViewModel())
                     .environmentObject(themeManager)
@@ -22,7 +22,7 @@ struct ContentView: View {
                 Label("Home", systemImage: "house.fill")
             }
 
-            // ── Search / Favourites tab ───────────────────────────────────
+            
             SearchView(viewModel: DIContainer.shared.resolveSearchViewModel())
                 .environmentObject(themeManager)
                 .tabItem {
@@ -38,16 +38,13 @@ struct ContentView: View {
         let appearance = UITabBarAppearance()
         appearance.configureWithOpaqueBackground()
 
-        // Background matches the card background from the current theme
         appearance.backgroundColor = UIColor(colors.cardBackground)
 
-        // Selected icon / label — accent (cyan)
         appearance.stackedLayoutAppearance.selected.iconColor  = UIColor(colors.accent)
         appearance.stackedLayoutAppearance.selected.titleTextAttributes = [
             .foregroundColor: UIColor(colors.accent)
         ]
 
-        // Unselected — a neutral grey that reads clearly in both light & dark
         let unselected = UIColor.systemGray
         appearance.stackedLayoutAppearance.normal.iconColor = unselected
         appearance.stackedLayoutAppearance.normal.titleTextAttributes = [
