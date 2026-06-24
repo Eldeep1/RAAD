@@ -25,7 +25,7 @@ final class CityWeatherViewModel: ObservableObject {
 
 
     private let repository: WeatherRepositoryProtocol
-    private let favouriteRepo: FavouriteLocationRepository
+    private let favouriteRepo: FavouriteLocationRepositoryProtocol
 
 
     init(
@@ -34,7 +34,7 @@ final class CityWeatherViewModel: ObservableObject {
         latitude: Double,
         longitude: Double,
         repository: WeatherRepositoryProtocol,
-        favouriteRepo: FavouriteLocationRepository
+        favouriteRepo: FavouriteLocationRepositoryProtocol
     ) {
         self.cityName      = cityName
         self.country       = country
